@@ -32,6 +32,11 @@ The live GitHub check requires internet access and deliberately uses a fake toke
 - Session TTL, salt rebinding, lock, backend errors and cache fallback policy.
 - UI schemas, sanitized output and audit field filtering.
 
+### Reproducibility and supply chain
+- Resolve the release dependency set from a committed lock/constraints file and test installation from that exact set.
+- Run the vulnerability audit against the exact release dependency set, not only an ad-hoc developer environment.
+- Record resolved versions, hashes, build command and artifact checksum with the release commit.
+
 ### Integration tests
 - Real stdio MCP SDK client against keyvault.
 - Wrapped unrelated MCP server receives only intended environment values.
