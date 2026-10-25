@@ -8,10 +8,10 @@ The project requires Python 3.11 or newer. Python 3.10 reached end of life on 20
 
 | Version | Status | Evidence |
 |---|---|---|
-| 3.11 | CI target; verification pending for current commit | GitHub Actions matrix |
-| 3.12 | Previously verified | [Historical 62-test run](https://github.com/Loofy147/keyvault/actions/runs/40225556583) |
-| 3.13 | CI target; verification pending for current commit | GitHub Actions matrix |
-| 3.14 | CI target; verification pending for current commit | GitHub Actions matrix |
+| 3.11 | Verified on current readiness commit: 62 passed | [CI matrix run](https://github.com/Loofy147/keyvault/actions/runs/40226816791) |
+| 3.12 | Verified on current readiness commit: 62 passed | [CI matrix run](https://github.com/Loofy147/keyvault/actions/runs/40226816791) |
+| 3.13 | Verified on current readiness commit: 62 passed | [CI matrix run](https://github.com/Loofy147/keyvault/actions/runs/40226816791) |
+| 3.14 | Verified on current readiness commit: 62 passed | [CI matrix run](https://github.com/Loofy147/keyvault/actions/runs/40226816791) |
 | 3.10 and earlier | Unsupported | End-of-life / below declared floor |
 
 The supported range must be reviewed when dependencies or Python lifecycle status changes. Python 3.15 is not yet in the declared matrix.
