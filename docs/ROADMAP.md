@@ -9,7 +9,7 @@ Prioritize risk reduction and evidence over feature count. Add-ons do not bypass
 - [x] stdio MCP server with scoped credential use and server-side HTTP credential attachment.
 - [x] Native OS keychain is the default session cache; file cache is explicit opt-in.
 - [x] Local-only UI for credential management, session controls, audit view and scoped MCP configuration.
-- [x] Linux/Ubuntu CI matrix: 62 passed each on Python 3.11, 3.12, 3.13 and 3.14 ([CI evidence](https://github.com/Loofy147/keyvault/actions/runs/40226816791)).
+- [x] Linux/Ubuntu CI matrix: 62 passed each on Python 3.11, 3.12, 3.13 and 3.14 ([CI evidence](https://github.com/Loofy147/keyvault/actions/runs/40227286219)).
 - [ ] Real-browser end-to-end tests; current UI coverage includes server-side HTTP checks and JavaScript syntax validation, not full browser automation.
 - [ ] Establish release owner, license choice, supported-platform matrix and vulnerability-reporting route.
 
@@ -52,7 +52,7 @@ Prioritize risk reduction and evidence over feature count. Add-ons do not bypass
 - [ ] Add fuzz/property testing for credential validation, URL parsing, envelopes, dotenv parsing and redaction boundaries.
 - [x] Add a manual mutation-check workflow.
 - [ ] Run and review mutation results against the current code state.
-- [x] Add dependency vulnerability scanning; the initial scan reported no known vulnerabilities ([run](https://github.com/Loofy147/keyvault/actions/runs/40226816792)).
+- [x] Add dependency vulnerability scanning; the initial scan reported no known vulnerabilities ([run](https://github.com/Loofy147/keyvault/actions/runs/40227286267)).
 - [ ] Document a bounded vulnerability-exception process covering risk, owner, expiry and re-review date.
 - [ ] Add a reproducible locked dependency set for release/test builds and audit the exact resolved set used for release artifacts.
 - [x] Pin GitHub Actions to full immutable commit SHAs and maintain minimal permissions.
@@ -60,7 +60,7 @@ Prioritize risk reduction and evidence over feature count. Add-ons do not bypass
 
 ## Phase 3 — Compatibility and packaging (P1)
 
-- [x] Run CI across Python 3.11–3.14 while those interpreters remain supported ([matrix result](https://github.com/Loofy147/keyvault/actions/runs/40226816791)).
+- [x] Run CI across Python 3.11–3.14 while those interpreters remain supported ([matrix result](https://github.com/Loofy147/keyvault/actions/runs/40227286219)).
 - [ ] Run OS-native keychain jobs on macOS, Windows and Linux.
 - [ ] Add smoke tests for Claude Desktop, Cursor and one additional MCP client; record exact tested versions/configurations.
 - [ ] Build wheel and source distribution; install in a clean environment and verify the packaged UI loads.

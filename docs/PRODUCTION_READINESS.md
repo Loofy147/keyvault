@@ -4,7 +4,7 @@
 
 Last reviewed: 2026-10-25  
 Repository: https://github.com/Loofy147/keyvault  
-Latest verified regression result for the readiness update: **62 passed on each of Python 3.11, 3.12, 3.13 and 3.14 on Ubuntu** ([CI matrix run](https://github.com/Loofy147/keyvault/actions/runs/40226816791)). Native keychain OS integration and browser E2E have not yet been verified. The initial dependency audit reported **No known vulnerabilities found** ([security workflow](https://github.com/Loofy147/keyvault/actions/runs/40226816792)).
+Latest verified regression result: **62 passed on each of Python 3.11, 3.12, 3.13 and 3.14 on Ubuntu** ([CI matrix run](https://github.com/Loofy147/keyvault/actions/runs/40227286219)). Native keychain OS integration and browser E2E have not yet been verified. The latest dependency audit reported **No known vulnerabilities found** ([security workflow](https://github.com/Loofy147/keyvault/actions/runs/40227286267)).
 
 ## Evidence ledger
 
@@ -82,7 +82,7 @@ The audit file is local and editable by the same OS identity. Filtering events i
 - [ ] Native keychain tests pass on every platform claimed as supported.
 - [x] Python support floor excludes end-of-life interpreters.
 - [ ] Regression, targeted security and mutation suites pass on the release commit.
-- [x] Initial dependency audit reported no known vulnerabilities ([run](https://github.com/Loofy147/keyvault/actions/runs/40226816792)); repeat and review exceptions for each release.
+- [x] Initial dependency audit reported no known vulnerabilities ([run](https://github.com/Loofy147/keyvault/actions/runs/40227286267)); repeat and review exceptions for each release.
 - [x] Third-party actions are pinned to reviewed full commit SHAs.
 - [ ] Clean wheel/source-distribution install works; package includes the UI asset.
 - [ ] Backup/restore, passphrase change, secret rotation and incident recovery are rehearsed.
