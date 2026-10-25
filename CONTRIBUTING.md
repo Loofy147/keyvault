@@ -2,7 +2,7 @@
 
 ## Setup
 
-Use a currently security-supported Python version. Python 3.10 reached end of life on 2026-10-01; the project support floor is being moved to Python 3.11 and newer.
+Use a currently security-supported Python version. The project requires Python 3.11 or newer. Python 3.10 reached end of life on 2026-10-01.
 
 ~~~sh
 python -m venv .venv
