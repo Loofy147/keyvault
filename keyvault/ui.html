@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>keyvault · Local credential control</title>
+<style>
+:root{--bg:#0c1118;--panel:#121a24;--panel2:#182331;--line:#263545;--text:#e8eef5;--muted:#92a3b5;--accent:#72e0c2;--accent2:#193b39;--red:#ff8d97;--amber:#ffd18b;--radius:15px}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 78% -10%,#203d48 0,transparent 34%),var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+.topbar{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,4vw,54px);background:#0c1118d9;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:12px;font-size:17px;font-weight:750;letter-spacing:-.4px}.logo{display:grid;place-items:center;width:36px;height:36px;background:var(--accent);color:#09221c;border-radius:11px;font-weight:900;font-size:19px}
+.brand small{display:block;font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:650;margin-top:-3px}
+.top-actions{display:flex;gap:10px;align-items:center}.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);color:var(--muted);padding:6px 10px;border-radius:99px;font-size:12px}.dot{width:7px;height:7px;border-radius:100%;background:#64788a}.pill.good .dot{background:var(--accent)}.pill.bad .dot{background:var(--red)}
+.shell{max-width:1440px;margin:0 auto;padding:28px clamp(16px,3vw,44px) 56px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px}
+.sidebar{align-self:start;position:sticky;top:96px}.side-label{font-size:10px;color:#6f8294;letter-spacing:1.8px;font-weight:750;padding:13px 12px 8px}.nav{display:flex;flex-direction:column;gap:5px}.nav button{display:flex;align-items:center;gap:12px;padding:11px 12px;background:transparent;border:1px solid transparent;color:var(--muted);border-radius:10px;text-align:left}.nav button.active{color:var(--text);background:#18242f;border-color:#2b3e4d}.nav button.active .nav-icon{color:var(--accent)}.nav-icon{display:inline-grid;place-items:center;width:22px;font-size:16px;color:#71879a}
+.sidebar-note{margin-top:28px;padding:13px 14px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:12px}.sidebar-note strong{color:var(--text);display:block;margin-bottom:6px;font-size:12px}.main{min-width:0}.heading{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:25px}.eyebrow{color:var(--accent);text-transform:uppercase;letter-spacing:1.8px;font-size:10px;font-weight:750}.heading h1{font-size:clamp(26px,3vw,35px);letter-spacing:-1.2px;line-height:1.12;margin:7px 0 8px}.heading p{color:var(--muted);margin:0;max-width:650px}.buttons{display:flex;flex-wrap:wrap;gap:9px}
+.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:9px;padding:9px 13px;font-weight:650;white-space:nowrap}.btn:hover{border-color:#587082}.btn.primary{background:var(--accent);color:#09221c;border-color:var(--accent)}.btn.danger{color:var(--red);border-color:#59313b;background:#2b1a23}.btn.ghost{background:transparent}.btn.small{font-size:12px;padding:6px 9px}.btn:disabled{opacity:.5;cursor:wait}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.stat,.panel{background:linear-gradient(145deg,#141e29,#101721);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 12px 40px #00000012}.stat{padding:17px 18px;min-height:123px}.stat-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}.stat-icon{display:grid;place-items:center;border:1px solid #2d4a4a;background:#18312f;color:var(--accent);width:32px;height:32px;border-radius:9px;font-size:15px}.stat-num{font-size:28px;font-weight:760;letter-spacing:-1px;margin:8px 0 0}.stat-foot{font-size:11px;color:var(--muted)}
+.panel{padding:20px;margin-top:16px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.panel-head h2{font-size:15px;margin:0;letter-spacing:-.2px}.panel-head p{font-size:12px;color:var(--muted);margin:3px 0 0}.muted{color:var(--muted)}.tiny{font-size:11px}.list{display:flex;flex-direction:column}.list-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #22303e}.list-row:first-child{border-top:0}.cred-mark{flex:none;display:grid;place-items:center;width:37px;height:37px;border-radius:10px;background:#1b2b38;color:#a4f3dc;font-size:14px;font-weight:800}.grow{min-width:0;flex:1}.row-title{font-weight:700;overflow-wrap:anywhere}.row-sub{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.badge{display:inline-block;border:1px solid #304455;border-radius:6px;padding:3px 7px;font-size:10px;color:#b9cad9;white-space:nowrap}.badge.green{color:var(--accent);border-color:#2e6157;background:#17312e}.badge.warn{color:var(--amber);border-color:#634f33;background:#2b2419}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:11px}table{border-collapse:collapse;width:100%;min-width:690px;text-align:left}th{background:#18232f;color:#9eb0c0;font-weight:700;text-transform:uppercase;letter-spacing:.9px;font-size:10px;position:sticky;top:0}th,td{padding:12px 13px;border-bottom:1px solid #263440;vertical-align:top}tbody tr:last-child td{border-bottom:0}td{font-size:12px;color:#cad5e0}td strong{color:var(--text);font-size:13px}.actions{display:flex;gap:6px}
+.search{border:1px solid var(--line);background:#0c131b;color:var(--text);padding:9px 11px;border-radius:9px;width:min(100%,260px)}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px;min-width:0}.field.full{grid-column:1/-1}.field label{font-size:11px;color:#a4b4c3;font-weight:700}.field input,.field select,.field textarea{width:100%;background:#0c131b;border:1px solid #304050;border-radius:9px;padding:10px 11px;color:var(--text);min-width:0}.field textarea{resize:vertical;min-height:74px}.field small{font-size:11px;color:#7d92a5}.form-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:17px;flex-wrap:wrap}
+.notice{border:1px solid #34524d;background:#142823;color:#c5f4e7;padding:12px 14px;border-radius:10px;font-size:12px;margin:0 0 14px}.notice.warn{border-color:#6a5332;background:#2b2318;color:#ffdfa9}.notice.error{border-color:#643642;background:#2b1921;color:#ffc1c8}.empty{padding:30px 14px;text-align:center;color:var(--muted)}.empty strong{display:block;color:var(--text);margin:6px 0}.empty .btn{margin-top:12px}
+.lock-wrap{max-width:560px;margin:36px auto;padding:clamp(20px,4vw,32px)}.lock-art{font-size:28px}.lock-wrap h2{margin:7px 0 6px;font-size:24px;letter-spacing:-.6px}.lock-wrap p{color:var(--muted);margin:0 0 22px}.lock-wrap .field{margin-top:14px}.lock-wrap .btn{width:100%;margin-top:18px}.hidden{display:none!important}.toast{position:fixed;bottom:22px;right:22px;z-index:30;max-width:min(420px,calc(100vw - 32px));padding:12px 16px;border:1px solid #365d53;border-radius:11px;background:#152d28;color:#d5fff2;box-shadow:0 10px 35px #0008}.toast.error{border-color:#74414a;background:#301c23;color:#ffd1d5}
+.audit-item{display:grid;grid-template-columns:155px 1fr auto;gap:12px;padding:13px 0;border-bottom:1px solid #24323f;font-size:12px}.audit-item:last-child{border:0}.audit-time{color:var(--muted)}.audit-action{font-weight:750}.audit-details{color:#98a9b9;overflow-wrap:anywhere;margin-top:3px}.danger-zone{border-color:#583742}.danger-zone h2{color:var(--red)}
+@media(max-width:940px){.shell{grid-template-columns:1fr;gap:17px}.sidebar{position:static}.side-label,.sidebar-note{display:none}.nav{flex-direction:row;overflow:auto;padding-bottom:4px}.nav button{white-space:nowrap;flex:1;justify-content:center}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.shell{padding-top:20px}}
+@media(max-width:640px){.topbar{height:62px;padding:0 14px}.top-actions .pill{display:none}.shell{padding:16px 12px 36px}.nav button{font-size:12px;padding:10px 8px}.heading{flex-direction:column;align-items:stretch;margin-bottom:18px}.grid{grid-template-columns:1fr;gap:9px}.stat{min-height:0;padding:13px 15px}.stat-num{font-size:24px;margin:2px 0}.stat-icon{width:29px;height:29px}.panel{padding:14px;margin-top:12px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel-head{align-items:flex-start;flex-direction:column}.search{width:100%}.audit-item{grid-template-columns:1fr auto;gap:4px}.audit-time{grid-column:1/-1}.top-actions .btn{padding:7px 9px}.brand{font-size:15px}.logo{width:32px;height:32px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="logo">k.</div><div>keyvault<small>LOCAL CONTROL PLANE</small></div></div>
+  <div class="top-actions"><span class="pill" id="session-pill"><span class="dot"></span><span id="session-label">Checking session</span></span><button class="btn ghost" id="top-lock" type="button">Lock vault</button></div>
+</header>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="side-label">WORKSPACE</div>
+    <nav class="nav" aria-label="Main navigation">
+      <button class="active" data-view="overview"><span class="nav-icon">▦</span>Overview</button>
+      <button data-view="credentials"><span class="nav-icon">⌘</span>Credentials</button>
+      <button data-view="audit"><span class="nav-icon">≋</span>Audit trail</button>
+    </nav>
+    <div class="sidebar-note"><strong>Privacy by design</strong>No secrets are shown in lists or returned to the browser. The vault stays on this machine, behind a loopback-only server.</div>
+  </aside>
+  <main class="main">
+    <section id="gate" class="panel lock-wrap hidden">
+      <div class="lock-art">⌑</div><div class="eyebrow">Private workspace</div><h2 id="gate-title">Unlock keyvault</h2>
+      <p id="gate-copy">Enter your vault passphrase to manage credentials and access policy.</p>
+      <div id="gate-notice"></div>
+      <form id="gate-form">
+        <div class="field"><label for="gate-pass">Vault passphrase</label><input id="gate-pass" type="password" required autocomplete="current-password" minlength="1"></div>
+        <div id="confirm-field" class="field hidden"><label for="gate-confirm">Confirm passphrase</label><input id="gate-confirm" type="password" autocomplete="new-password" minlength="10"></div>
+        <div class="field"><label for="gate-ttl">Session duration</label><select id="gate-ttl"><option value="1800">30 minutes</option><option value="3600">1 hour</option><option value="28800" selected>8 hours</option><option value="86400">24 hours</option></select></div>
+        <button class="btn primary" type="submit" id="gate-submit">Unlock vault</button>
+      </form>
+      <p class="tiny" style="margin-top:16px">The passphrase is sent only to this localhost service. It is not saved in browser storage.</p>
+    </section>
+
+    <div id="workspace" class="hidden">
+      <section class="view" id="view-overview">
+        <div class="heading"><div><div class="eyebrow">Operations / Overview</div><h1>Credential control</h1><p>One local workspace for secrets, request boundaries and session health.</p></div><div class="buttons"><button class="btn" id="refresh-overview" type="button">↻ Refresh</button><button class="btn primary" id="add-first" type="button">＋ Add credential</button></div></div>
+        <div id="global-notice"></div>
+        <div class="grid">
+          <article class="stat"><div class="stat-top"><span>Stored credentials</span><span class="stat-icon">⌘</span></div><div class="stat-num" id="stat-creds">—</div><div class="stat-foot">Encrypted in the local vault</div></article>
+          <article class="stat"><div class="stat-top"><span>Session status</span><span class="stat-icon">◈</span></div><div class="stat-num" id="stat-session">—</div><div class="stat-foot" id="stat-session-foot">Session cache controls</div></article>
+          <article class="stat"><div class="stat-top"><span>Policy model</span><span class="stat-icon">⛨</span></div><div class="stat-num">Scoped</div><div class="stat-foot">HTTPS hosts · method allowlist · no redirects</div></article>
+        </div>
+        <section class="panel"><div class="panel-head"><div><h2>Credential inventory</h2><p>Values are never displayed in the inventory.</p></div><button class="btn small" id="all-credentials" type="button">Manage credentials →</button></div><div id="overview-list" class="list"></div></section>
+        <section class="panel"><div class="panel-head"><div><h2>Recent activity</h2><p>Sanitized audit events from this vault.</p></div><button class="btn small" id="all-audit" type="button">View audit trail →</button></div><div id="overview-audit" class="list"></div></section>
+      </section>
+
+      <section class="view hidden" id="view-credentials">
+        <div class="heading"><div><div class="eyebrow">Operations / Access control</div><h1>Credentials</h1><p>Manage secret material, host allowlists, HTTP methods and MCP exposure without copying keys into config files.</p></div><div class="buttons"><button class="btn" id="refresh-credentials" type="button">↻ Refresh</button><button class="btn primary" id="new-credential" type="button">＋ New credential</button></div></div>
+        <div class="panel">
+          <div class="panel-head"><div><h2>Credential registry</h2><p id="credential-count-label">— credentials</p></div><input class="search" id="credential-search" type="search" placeholder="Search name, host, provider…" aria-label="Search credentials"></div>
+          <div class="table-wrap"><table><thead><tr><th>Credential</th><th>Auth</th><th>Allowed hosts</th><th>Methods</th><th>Exposure</th><th>Actions</th></tr></thead><tbody id="credentials-table"></tbody></table></div>
+          <div id="credentials-empty" class="empty hidden"><div style="font-size:26px">⌘</div><strong>No credentials found</strong><span>Add a credential or change the search.</span></div>
+        </div>
+        <div id="editor" class="panel hidden">
+          <div class="panel-head"><div><h2 id="editor-title">New credential</h2><p>Secret values are write-only here. Leave the secret blank when editing to preserve the current value.</p></div><button class="btn small ghost" id="cancel-editor" type="button">Close ×</button></div>
+          <form id="credential-form">
+            <div class="form-grid">
+              <div class="field"><label for="c-name">Credential name *</label><input id="c-name" required maxlength="64" pattern="[a-z0-9][a-z0-9_.-]{0,63}" placeholder="github" autocomplete="off"><small>Lowercase letters, digits, dots, underscores and hyphens.</small></div>
+              <div class="field"><label for="c-provider">Provider / service</label><input id="c-provider" maxlength="120" placeholder="GitHub, Stripe, internal API"></div>
+              <div class="field"><label for="c-kind">Authentication type *</label><select id="c-kind"><option value="bearer">Bearer token</option><option value="header">Custom header</option><option value="query">Query parameter</option><option value="basic">HTTP Basic</option><option value="none">Env-only (not visible to agents)</option></select></div>
+              <div class="field"><label for="c-secret">Secret value <span id="secret-required">*</span></label><input id="c-secret" type="password" autocomplete="new-password" placeholder="Paste or type here; never shown again"><small id="secret-help">The value is encrypted when saved, then cleared from this form.</small></div>
+              <div class="field"><label for="c-hosts">Allowed hosts</label><textarea id="c-hosts" placeholder="api.github.com&#10;*.internal.example.com"></textarea><small>One host per line. Use HTTPS; wildcard patterns match subdomains only. Required for HTTP credentials.</small></div>
+              <div class="field"><label for="c-methods">Allowed HTTP methods</label><div class="field" style="gap:8px;padding:11px;border:1px solid #304050;border-radius:9px;background:#0c131b;flex-direction:row;flex-wrap:wrap" id="method-options"></div><small>GET and HEAD are the default. Grant writes only when needed.</small></div>
+              <div class="field"><label for="c-header">Custom header name</label><input id="c-header" maxlength="100" placeholder="x-api-key"></div>
+              <div class="field"><label for="c-param">Query parameter name</label><input id="c-param" maxlength="100" placeholder="api_key"></div>
+              <div class="field"><label for="c-env">Environment variable name</label><input id="c-env" maxlength="200" placeholder="GITHUB_TOKEN"><small>Used only by <code>keyvault run</code>.</small></div>
+              <div class="field"><label for="c-tags">Tags</label><input id="c-tags" maxlength="500" placeholder="development, automation"></div>
+              <div class="field full"><label for="c-notes">Private owner note</label><textarea id="c-notes" maxlength="1000" placeholder="Optional note; never surfaced to agents."></textarea></div>
+            </div>
+            <div class="form-footer"><span class="tiny muted" id="editor-foot">Changes are encrypted in the local vault.</span><div class="buttons"><button type="button" class="btn" id="cancel-editor-bottom">Cancel</button><button type="submit" class="btn primary" id="save-credential">Save credential</button></div></div>
+          </form>
+        </div>
+      </section>
+
+      <section class="view hidden" id="view-audit">
+        <div class="heading"><div><div class="eyebrow">Operations / Traceability</div><h1>Audit trail</h1><p>Review access and policy decisions without exposing credential values or request bodies.</p></div><button class="btn" id="refresh-audit" type="button">↻ Refresh</button></div>
+        <div class="panel"><div class="panel-head"><div><h2>Recent events</h2><p>Newest first · up to 200 sanitized records</p></div><span class="badge green" id="audit-count">0 events</span></div><div id="audit-list"></div><div id="audit-empty" class="empty hidden"><strong>No audit activity yet</strong><span>Credential changes and API calls will appear here.</span></div></div>
+        <div class="panel"><div class="panel-head"><div><h2>Audit boundary</h2><p>What keyvault records, and what it excludes</p></div></div><div class="list">
+          <div class="list-row"><span class="stat-icon">✓</span><div class="grow"><div class="row-title">Recorded</div><div class="row-sub">Actor, operation, credential name, host, method, response status and policy denials where available.</div></div></div>
+          <div class="list-row"><span class="stat-icon">⊘</span><div class="grow"><div class="row-title">Excluded from this view</div><div class="row-sub">Secret values, request/response bodies, private notes and environment-variable values.</div></div></div>
+        </div></div>
+      </section>
+    </div>
+  </main>
+</div>
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+<script>
+"use strict";
+const CSRF = "__KEYVAULT_CSRF_TOKEN__";
+const $ = (id) => document.getElementById(id);
+const state = {status:null,credentials:[],events:[],view:"overview",editing:null,initialized:false};
+const methods = ["GET","HEAD","POST","PUT","PATCH","DELETE"];
+function node(tag, cls, text) { const n=document.createElement(tag); if(cls)n.className=cls; if(text!==undefined)n.textContent=String(text); return n; }
+function append(parent,tag,cls,text){const n=node(tag,cls,text);parent.appendChild(n);return n;}
+function note(text,type=""){const n=$("global-notice");n.replaceChildren();if(!text)return;append(n,"div","notice "+type,text);}
+function toast(text,error=false){const t=$("toast");t.textContent=text;t.classList.toggle("error",error);t.classList.remove("hidden");clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.add("hidden"),3600);}
+async function api(path,data){
+  const opt={method:data===undefined?"GET":"POST",cache:"no-store",headers:{"Accept":"application/json"}};
+  if(data!==undefined){opt.headers["Content-Type"]="application/json";opt.headers["X-Keyvault-UI"]=CSRF;opt.body=JSON.stringify(data);}
+  const res=await fetch(path,opt);let payload={};try{payload=await res.json()}catch(_){}
+  if(!res.ok)throw new Error(payload.error||("Request failed ("+res.status+")."));
+  return payload;
+}
+function setView(name){
+  state.view=name;
+  document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("hidden",v.id!=="view-"+name));
+  if(name==="credentials")renderCredentials();if(name==="audit")renderAudit();
+}
+function labelStatus(status){
+  const pill=$("session-pill"),lab=$("session-label");
+  pill.className="pill "+(status?.unlocked?"good":"bad");
+  lab.textContent=status?.unlocked?"Session unlocked":"Vault locked";
+  $("top-lock").classList.toggle("hidden",!status?.unlocked);
+}
+function gateShow(status){
+  state.initialized=!!status?.initialized;
+  $("gate").classList.remove("hidden");$("workspace").classList.add("hidden");
+  $("gate-title").textContent=state.initialized?"Unlock keyvault":"Create your encrypted vault";
+  $("gate-copy").textContent=state.initialized?"Enter your passphrase to unlock the local session. Credentials remain encrypted at rest.":"Set a strong passphrase to create your local encrypted vault.";
+  $("confirm-field").classList.toggle("hidden",state.initialized);
+  $("gate-pass").autocomplete=state.initialized?"current-password":"new-password";
+  $("gate-pass").value="";$("gate-confirm").value="";
+  $("gate-submit").textContent=state.initialized?"Unlock vault":"Create vault";
+  $("session-label").textContent=state.initialized?"Vault locked":"Not initialized";
+  $("top-lock").classList.add("hidden");
+  if(status?.warning){$("gate-notice").replaceChildren();append($("gate-notice"),"div","notice warn",status.warning);}
+}
+async function refreshAll(){
+  try{
+    const status=await api("/api/status");state.status=status;labelStatus(status);
+    if(!status.initialized||!status.unlocked){gateShow(status);return;}
+    $("gate").classList.add("hidden");$("workspace").classList.remove("hidden");
+    $("stat-session").textContent="Unlocked";$("stat-session-foot").textContent="Backend: "+(status.session_backend||"native");
+    note(status.environment_passphrase_configured?"KEYVAULT_PASSPHRASE is set in this process environment. The CLI may unlock independently of the UI session.":status.warning||"",status.environment_passphrase_configured||status.warning?"warn":"");
+    const [creds,audit]=await Promise.all([api("/api/credentials"),api("/api/audit")]);
+    state.credentials=creds.credentials||[];state.events=audit.events||[];
+    $("stat-creds").textContent=String(state.credentials.length);
+    renderOverview();renderCredentials();renderAudit();
+  }catch(e){note(e.message,"error");toast(e.message,true);}
+}
+function renderOverview(){
+  const host=$("overview-list");host.replaceChildren();
+  if(!state.credentials.length){const e=append(host,"div","empty");append(e,"strong","","Your vault is ready for its first credential");append(e,"span","","Add a credential to set explicit host and method boundaries.");return;}
+  state.credentials.slice(0,5).forEach(c=>{
+    const row=append(host,"div","list-row");append(row,"div","cred-mark",(c.name||"?").slice(0,1).toUpperCase());
+    const g=append(row,"div","grow");append(g,"div","row-title",c.name);append(g,"div","row-sub",(c.provider||c.kind)+" · "+(c.hosts||[]).join(", "));
+    append(row,"span","badge",c.methods?.join(" / ")||"env only");
+  });
+  const a=$("overview-audit");a.replaceChildren();
+  if(!state.events.length){append(a,"div","empty","No audit activity yet.");return;}
+  state.events.slice(0,4).forEach(ev=>{
+    const r=append(a,"div","list-row");const icon=append(r,"div","stat-icon","↳");icon.style.flex="none";
+    const g=append(r,"div","grow");append(g,"div","row-title",ev.action||"event");append(g,"div","row-sub",[ev.credential,ev.host,ev.method,ev.status].filter(x=>x!==undefined&&x!==null&&x!=="").join(" · "));
+    append(r,"span","tiny muted",ev.ts||"");
+  });
+}
+function renderCredentials(){
+  const body=$("credentials-table");body.replaceChildren();
+  const q=$("credential-search").value.trim().toLowerCase();
+  const rows=state.credentials.filter(c=>[c.name,c.provider,c.kind,...(c.hosts||[]),...(c.methods||[])].join(" ").toLowerCase().includes(q));
+  $("credential-count-label").textContent=state.credentials.length+" credentials";
+  $("credentials-empty").classList.toggle("hidden",rows.length!==0);
+  rows.forEach(c=>{
+    const tr=append(body,"tr");let td=append(tr,"td");append(td,"strong", "", c.name);append(td,"div","row-sub",c.provider||"No provider");
+    td=append(tr,"td");append(td,"span","badge",c.kind);if(c.kind==="header")append(td,"div","row-sub",c.header_name);if(c.kind==="query")append(td,"div","row-sub",c.param_name);
+    td=append(tr,"td");append(td,"div","row-sub",(c.hosts||[]).join("\n")||"—").style.whiteSpace="pre-line";
+    td=append(tr,"td");append(td,"span","badge",(c.methods||[]).join(" · ")||"—");
+    td=append(tr,"td");append(td,"span","badge "+(c.kind==="none"?"warn":"green"),c.kind==="none"?"Env only":"MCP eligible");
+    td=append(tr,"td");const actions=append(td,"div","actions");const edit=append(actions,"button","btn small","Edit");edit.type="button";edit.addEventListener("click",()=>openEditor(c.name));const del=append(actions,"button","btn small danger","Delete");del.type="button";del.addEventListener("click",()=>deleteCredential(c.name));
+  });
+}
+function renderAudit(){
+  const host=$("audit-list");host.replaceChildren();$("audit-count").textContent=state.events.length+" events";$("audit-empty").classList.toggle("hidden",state.events.length>0);
+  state.events.forEach(ev=>{
+    const r=append(host,"div","audit-item");append(r,"div","audit-time",ev.ts||"—");
+    const middle=append(r,"div","grow");append(middle,"div","audit-action",ev.action||"event");
+    append(middle,"div","audit-details",[ev.credential,ev.host,ev.method,ev.status!==undefined?"HTTP "+ev.status:null,ev.reason].filter(x=>x!==undefined&&x!==null&&x!=="").join(" · "));
+    append(r,"span","badge",ev.actor||"unknown");
+  });
+}
+function setupMethods(values=["GET","HEAD"]){
+  const host=$("method-options");host.replaceChildren();
+  methods.forEach(m=>{const label=append(host,"label","tiny",m);label.style.display="inline-flex";label.style.alignItems="center";label.style.gap="5px";const input=document.createElement("input");input.type="checkbox";input.value=m;input.name="method";input.checked=values.includes(m);label.prepend(input);});
+}
+function openEditor(name=null){
+  state.editing=name;
+  const c=state.credentials.find(v=>v.name===name);
+  $("editor-title").textContent=c?"Edit "+c.name:"New credential";
+  $("c-name").value=c?.name||"";$("c-name").disabled=!!c;
+  $("c-provider").value=c?.provider||"";$("c-kind").value=c?.kind||"bearer";$("c-secret").value="";
+  $("secret-required").classList.toggle("hidden",!!c);$("c-secret").required=!c;
+  $("secret-help").textContent=c?"Leave blank to keep the stored secret; enter a value only to rotate it.":"The value is encrypted when saved, then cleared from this form.";
+  $("c-hosts").value=(c?.hosts||[]).join("\n");$("c-header").value=c?.header_name||"";$("c-param").value=c?.param_name||"";
+  $("c-env").value=c?.env_var||"";$("c-tags").value=(c?.tags||[]).join(", ");$("c-notes").value=c?.notes||"";
+  setupMethods(c?.methods||["GET","HEAD"]);$("editor").classList.remove("hidden");$("editor").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function closeEditor(){$("editor").classList.add("hidden");state.editing=null;$("credential-form").reset();$("c-name").disabled=false;$("c-secret").required=true;setupMethods();}
+$("credential-form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const name=$("c-name").value.trim();const secret=$("c-secret").value;
+  const data={name,provider:$("c-provider").value,kind:$("c-kind").value,secret,
+    hosts:$("c-hosts").value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean),
+    methods:[...document.querySelectorAll('input[name="method"]:checked')].map(x=>x.value),
+    header_name:$("c-header").value,param_name:$("c-param").value,env_var:$("c-env").value,
+    tags:$("c-tags").value.split(",").map(s=>s.trim()).filter(Boolean),notes:$("c-notes").value};
+  const btn=$("save-credential");btn.disabled=true;
+  try{const res=await api("/api/credentials/save",data);$("c-secret").value="";closeEditor();toast(res.message);await refreshAll();}
+  catch(err){$("c-secret").value="";toast(err.message,true);}
+  finally{btn.disabled=false;}
+});
+async function deleteCredential(name){if(!confirm("Delete credential '"+name+"'? The previous encrypted vault backup may still contain its former value."))return;try{const r=await api("/api/credentials/delete",{name});toast(r.message);await refreshAll();}catch(e){toast(e.message,true);}}
+$("gate-form").addEventListener("submit",async e=>{
+  e.preventDefault();const pass=$("gate-pass").value;const confirmPass=$("gate-confirm").value;const ttl=Number($("gate-ttl").value);const btn=$("gate-submit");btn.disabled=true;
+  try{const route=state.initialized?"/api/unlock":"/api/init";const payload={passphrase:pass,ttl_seconds:ttl};if(!state.initialized)payload.confirm=confirmPass;const r=await api(route,payload);$("gate-pass").value="";$("gate-confirm").value="";toast(r.message);await refreshAll();}
+  catch(err){$("gate-pass").value="";$("gate-confirm").value="";const box=$("gate-notice");box.replaceChildren();append(box,"div","notice error",err.message);}
+  finally{btn.disabled=false;}
+});
+async function lockVault(){if(!confirm("Lock the keyvault session now? Running MCP servers using this session will stop being able to access credentials."))return;try{const r=await api("/api/lock",{});toast(r.message);await refreshAll();}catch(e){toast(e.message,true);}}
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>setView(b.dataset.view)));
+$("top-lock").addEventListener("click",lockVault);$("refresh-overview").addEventListener("click",refreshAll);$("refresh-credentials").addEventListener("click",refreshAll);$("refresh-audit").addEventListener("click",refreshAll);
+$("add-first").addEventListener("click",()=>{setView("credentials");openEditor();});$("new-credential").addEventListener("click",()=>openEditor());$("cancel-editor").addEventListener("click",closeEditor);$("cancel-editor-bottom").addEventListener("click",closeEditor);
+$("all-credentials").addEventListener("click",()=>setView("credentials"));$("all-audit").addEventListener("click",()=>setView("audit"));$("credential-search").addEventListener("input",renderCredentials);
+$("c-kind").addEventListener("change",()=>{const k=$("c-kind").value;$("c-hosts").disabled=k==="none";$("c-methods").disabled=k==="none";$("method-options").style.opacity=k==="none"?".45":"1";});
+setupMethods();refreshAll();
+</script>
+</body>
+</html>
