@@ -19,5 +19,8 @@ keyvault = "keyvault.cli:main"
 [tool.setuptools]
 packages = ["keyvault"]
 
+[tool.setuptools.package-data]
+keyvault = ["ui.html"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
