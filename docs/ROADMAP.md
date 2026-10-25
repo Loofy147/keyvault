@@ -9,7 +9,7 @@ Prioritize risk reduction and evidence over feature count. Add-ons do not bypass
 - [x] stdio MCP server with scoped credential use and server-side HTTP credential attachment.
 - [x] Native OS keychain is the default session cache; file cache is explicit opt-in.
 - [x] Local-only UI for credential management, session controls, audit view and scoped MCP configuration.
-- [x] Linux/Python 3.12 suite: 62 passed in the recorded successful run before this readiness update ([CI evidence](https://github.com/Loofy147/keyvault/actions/runs/40225556583)).
+- [x] Linux/Ubuntu CI matrix: 62 passed each on Python 3.11, 3.12, 3.13 and 3.14 ([CI evidence](https://github.com/Loofy147/keyvault/actions/runs/40226816791)).
 - [ ] Real-browser end-to-end tests; current UI coverage includes server-side HTTP checks and JavaScript syntax validation, not full browser automation.
 - [ ] Establish release owner, license choice, supported-platform matrix and vulnerability-reporting route.
 
