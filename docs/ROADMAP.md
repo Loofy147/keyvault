@@ -50,8 +50,10 @@ Prioritize risk reduction and evidence over feature count. Add-ons do not bypass
 - [ ] Add a user-confirmed backup purge that explains the recovery consequences.
 - [ ] Add per-credential request rate limits and response budgets; test them.
 - [ ] Add fuzz/property testing for credential validation, URL parsing, envelopes, dotenv parsing and redaction boundaries.
-- [x] Add a manual mutation-check workflow.\n- [ ] Run and review mutation results against the current code state.
+- [x] Add a manual mutation-check workflow.
+- [ ] Run and review mutation results against the current code state.
 - [x] Add dependency vulnerability scanning and a documented exception/expiry policy; the initial scan reported no known vulnerabilities ([run](https://github.com/Loofy147/keyvault/actions/runs/40226816792)).
+- [ ] Add a reproducible locked dependency set for release/test builds and audit the exact resolved set used for release artifacts.
 - [x] Pin GitHub Actions to full immutable commit SHAs and maintain minimal permissions.
 - [x] Move the supported Python floor to 3.11; Python 3.10 reached end of life on 2026-10-01.
 
