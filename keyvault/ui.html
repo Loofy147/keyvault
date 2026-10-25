@@ -252,7 +252,7 @@ document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",(
 $("top-lock").addEventListener("click",lockVault);$("refresh-overview").addEventListener("click",refreshAll);$("refresh-credentials").addEventListener("click",refreshAll);$("refresh-audit").addEventListener("click",refreshAll);
 $("add-first").addEventListener("click",()=>{setView("credentials");openEditor();});$("new-credential").addEventListener("click",()=>openEditor());$("cancel-editor").addEventListener("click",closeEditor);$("cancel-editor-bottom").addEventListener("click",closeEditor);
 $("all-credentials").addEventListener("click",()=>setView("credentials"));$("all-audit").addEventListener("click",()=>setView("audit"));$("credential-search").addEventListener("input",renderCredentials);
-$("c-kind").addEventListener("change",()=>{const k=$("c-kind").value;$("c-hosts").disabled=k==="none";$("c-methods").disabled=k==="none";$("method-options").style.opacity=k==="none"?".45":"1";});
+$("c-kind").addEventListener("change",()=>{const k=$("c-kind").value;$("c-hosts").disabled=k==="none";document.querySelectorAll("#method-options input").forEach(input=>input.disabled=k==="none");$("method-options").style.opacity=k==="none"?".45":"1";});
 setupMethods();refreshAll();
 </script>
 </body>
