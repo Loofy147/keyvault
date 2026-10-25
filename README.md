@@ -1,5 +1,7 @@
 # keyvault
 
+> **Production status: NOT READY.** The DNS/IP destination-pinning gap, native keychain platform verification, cross-process writer safety and browser end-to-end coverage remain release blockers. See [Production readiness](docs/PRODUCTION_READINESS.md).
+
 A local, encrypted vault for API keys and bearer tokens, with two ways to hand them to MCP servers and agents **without pasting secrets into config files or chat**.
 
 | Use case | Command | What the other side gets |
@@ -69,8 +71,22 @@ scrypt (default N=2^17) -> AES-256-GCM. The KDF parameters are authenticated, so
 - Session cache tests use an in-memory keychain double. Real native keychain behavior still needs platform-specific verification on Linux desktop/headless, Windows Credential Locker, and macOS Keychain.
 - Tested on Linux with Python 3.12 and mcp 2.3.0. The MCP side was exercised with the MCP Python SDK client over stdio, not with specific desktop clients. Windows/macOS are untested (`run` uses an untested subprocess fallback on non-POSIX).
 
+## Project documentation
+
+- [Production readiness gates and evidence ledger](docs/PRODUCTION_READINESS.md)
+- [Prioritized roadmap](docs/ROADMAP.md)
+- [Add-on feature portfolio and acceptance criteria](docs/ADD_ONS.md)
+- [Architecture and trust boundaries](docs/ARCHITECTURE.md)
+- [Operations, backup and incident runbook](docs/OPERATIONS.md)
+- [Production release checklist](docs/RELEASE_CHECKLIST.md)
+- [Testing strategy and evidence rules](docs/TESTING.md)
+- [Platform / Python / MCP-client compatibility](docs/COMPATIBILITY.md)
+- [Security reporting policy](SECURITY.md)
+- [Contribution requirements](CONTRIBUTING.md)
+- [Changelog](CHANGELOG.md)
+
 ## Tests
 
-    pip install -e '.[test]' && pytest         # 62 tests in the current Linux/Python 3.12 CI run (runtime depends on platform and scrypt performance)
+    pip install -e '.[test]' && pytest         # historical baseline: 62 passed on Linux/Python 3.12; see CI for current matrix
     python tests/mutation_check.py             # breaks 26 behaviours on purpose, expects a test to fail each time
     python tests/live_github_check.py          # needs internet: real HTTPS call with a FAKE token
