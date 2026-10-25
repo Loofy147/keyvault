@@ -77,6 +77,7 @@ scrypt (default N=2^17) -> AES-256-GCM. The KDF parameters are authenticated, so
 - [Prioritized roadmap](docs/ROADMAP.md)
 - [Add-on feature portfolio and acceptance criteria](docs/ADD_ONS.md)
 - [Architecture and trust boundaries](docs/ARCHITECTURE.md)
+- [Threat model and residual risks](docs/THREAT_MODEL.md)
 - [Operations, backup and incident runbook](docs/OPERATIONS.md)
 - [Production release checklist](docs/RELEASE_CHECKLIST.md)
 - [Testing strategy and evidence rules](docs/TESTING.md)
