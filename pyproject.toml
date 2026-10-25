@@ -7,7 +7,7 @@ name = "keyvault"
 version = "0.1.0"
 description = "Local encrypted credential vault with an MCP server that lets agents use API secrets without seeing them"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = ["cryptography>=42", "httpx>=0.27", "mcp>=2,<3", "keyring>=25,<27"]
 
 [project.optional-dependencies]
