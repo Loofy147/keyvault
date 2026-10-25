@@ -17,7 +17,7 @@ Latest verified regression result for the readiness update: **62 passed on each 
 | Local UI | Host/Origin/CSRF checks and JavaScript syntax check | Partially tested | Browser end-to-end tests and session-race tests |
 | Persistence integrity | Atomic replacement; encrypted backup copy | **Concurrency gap** | Cross-process writer locking and crash-recovery evidence |
 | Audit | Structured JSONL events | Local tampering is possible | Retention/integrity model, rotation and disk-full tests |
-| Supply chain | Immutable action pins, weekly dependency audit and Dependabot updates; initial audit found no known vulnerabilities | Partially hardened | Keep reviewing updates; add release-specific artifact provenance and exception expiry |
+| Supply chain | Immutable action pins, weekly dependency audit and Dependabot updates; initial audit found no known vulnerabilities | Partially hardened | Add a reproducible locked release dependency set, review exceptions/expiries and record artifact provenance |
 | Release/recovery | CLI commands exist; backup semantics documented | Incomplete | Reproducible artifacts, clean install, recovery and rollback evidence |
 
 ## Release-blocking issues
