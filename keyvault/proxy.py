@@ -29,7 +29,7 @@ TEXT_HINTS = ("text/", "json", "xml", "javascript", "yaml", "x-www-form-urlencod
 
 class ProxyError(ValueError):
     """A policy denial or request failure. Messages never contain secret values."""
-    
+
 
 # --------------------------------------------------------------------------- redaction
 
