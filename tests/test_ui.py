@@ -124,9 +124,19 @@ def test_ui_create_manage_rotate_delete_lock_and_sanitized_audit(ui, tmp_path):
     vault = V.Vault.open(V.vault_path(), PASSWORD)
     assert vault.creds["github"].value == "rotated-secret-value-456789abcdef"
 
+    status, data, _ = post(ui, "/api/snippet", {"allow": ["github"]})
+    assert status == 200 and data["credential_count"] == 1
+    snippet = json.loads(data["snippet"])
+    entry = snippet["mcpServers"]["keyvault"]
+    assert entry["args"] == ["-m", "keyvault", "serve", "--allow", "github"]
+    assert SECRET not in data["snippet"] and "rotated-secret-value-456789abcdef" not in data["snippet"]
+    status, data, _ = post(ui, "/api/snippet", {"allow": []})
+    assert status == 400 and "select at least one" in data["error"].lower()
+
     status, data, _ = request(ui, "/api/audit")
     audit_text = json.dumps(data)
     assert status == 200 and "credential_added" in audit_text and "credential_saved" in audit_text
+    assert "snippet_generated" in audit_text
     assert SECRET not in audit_text
     assert "rotated-secret-value-456789abcdef" not in audit_text
 
