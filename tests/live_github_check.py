@@ -11,7 +11,7 @@ PY = sys.executable
 FAKE = "ghp_" + "FAKEFAKEFAKE0123456789abcdefghijkl"   # deliberately invalid
 D = tempfile.mkdtemp(prefix="keyvault-live-")
 KVH, RUN, ERR = D + "/kv", D + "/run", D + "/server.err"
-env = dict(os.environ, KEYVAULT_HOME=KVH, XDG_RUNTIME_DIR=RUN)
+env = dict(os.environ, KEYVAULT_HOME=KVH, XDG_RUNTIME_DIR=RUN, KEYVAULT_SESSION_BACKEND="file")
 env.pop("KEYVAULT_PASSPHRASE", None)
 def cli(*a, inp=None, pw=True):
     e = dict(env); 
