@@ -28,6 +28,14 @@ Your MCP client config then holds credential *names*, never tokens.
 
 Secrets are only ever read from a hidden prompt or stdin, never from command-line arguments.
 
+## Local web UI
+
+Run `keyvault ui` to open the control panel at `http://127.0.0.1:8765/`. Use `keyvault ui --port 0 --no-browser` to choose an ephemeral port and print the URL without launching a browser. The first-run screen can create a vault; existing vaults can be unlocked for a selected TTL.
+
+The UI provides credential creation, editing and rotation; host and method allowlists; session unlock/lock; a sanitized audit trail; and a **scoped MCP config builder** that generates a client entry with only the credentials you select. The UI never returns secret values from its API, and leaves the secret blank when editing so an existing value is preserved unless you explicitly enter a rotation value. The passphrase and any newly entered secret exist transiently in the page and local request body; they are not put in browser storage, URLs, request logs or audit events.
+
+**Keep this service local.** The built-in server binds only to `127.0.0.1`, validates Host and Origin headers, requires a per-process request token for state changes, sets restrictive browser security headers, rate-limits failed passphrase attempts, and makes no external requests. Do not expose it through a reverse proxy, public tunnel, port forward or LAN bind. It uses the same session cache as the CLI/MCP server, so `Lock vault` invalidates that cached session for processes using it. If `KEYVAULT_PASSPHRASE` is set in the launching environment, the CLI may still unlock independently of the UI session; the UI warns about this.
+
 ## Credential settings
 
 - `--kind`: `bearer` (Authorization: Bearer), `header` (+ `--header-name`), `query` (+ `--param-name`), `basic` (secret is `user:password`), or `none` (env-only; invisible to agents).
