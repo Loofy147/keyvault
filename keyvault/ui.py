@@ -29,13 +29,15 @@ _AUDIT_FIELDS = {
 
 
 def _public_credential(c: Credential) -> dict:
-    """Safe view for the browser: no secret, private note, env-var name or timestamps."""
+    """Owner-facing metadata for the local UI; the secret value is deliberately excluded."""
     return c.agent_view() | {
         "kind": c.kind,
         "header_name": c.header_name,
         "param_name": c.param_name,
-        "env_var_set": bool(c.env_var),
-        "notes_set": bool(c.notes),
+        "env_var": c.env_var,
+        "notes": c.notes,
+        "created": c.created,
+        "updated": c.updated,
     }
 
 
@@ -289,8 +291,8 @@ class KeyvaultUIHandler(BaseHTTPRequestHandler):
             raise VaultError("Passphrases do not match.")
         if self.server.unlock_rate_limited():
             raise VaultError("Too many unlock attempts. Wait one minute and try again.")
-        vault = V.Vault.create(V.vault_path(), passphrase)
         ttl = _ttl_seconds(data.get("ttl_seconds", 8 * 3600))
+        vault = V.Vault.create(V.vault_path(), passphrase)
         backend = V.start_session(vault, ttl)
         V.audit({"actor": "webui", "action": "init", "ttl_seconds": ttl, "session_backend": V.session_backend_name()})
         self._json(201, {"ok": True, "message": "Vault created and unlocked.", "session_backend": V.session_backend_name()})
