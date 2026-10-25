@@ -50,14 +50,14 @@ Prioritize risk reduction and evidence over feature count. Add-ons do not bypass
 - [ ] Add a user-confirmed backup purge that explains the recovery consequences.
 - [ ] Add per-credential request rate limits and response budgets; test them.
 - [ ] Add fuzz/property testing for credential validation, URL parsing, envelopes, dotenv parsing and redaction boundaries.
-- [ ] Add a mutation-check workflow and require review of mutation survivors.
-- [ ] Add dependency vulnerability scanning and a documented exception/expiry policy.
-- [ ] Pin GitHub Actions to full immutable commit SHAs and maintain minimal permissions.
-- [ ] Keep supported Python floor on a maintained version; Python 3.10 reached end of life on 2026-10-01.
+- [x] Add a manual mutation-check workflow.\n- [ ] Run and review mutation results against the current code state.
+- [x] Add dependency vulnerability scanning and a documented exception/expiry policy; the initial scan reported no known vulnerabilities ([run](https://github.com/Loofy147/keyvault/actions/runs/40226816792)).
+- [x] Pin GitHub Actions to full immutable commit SHAs and maintain minimal permissions.
+- [x] Move the supported Python floor to 3.11; Python 3.10 reached end of life on 2026-10-01.
 
 ## Phase 3 — Compatibility and packaging (P1)
 
-- [ ] Run CI across Python 3.11–3.14 while those interpreters remain supported.
+- [x] Run CI across Python 3.11–3.14 while those interpreters remain supported ([matrix result](https://github.com/Loofy147/keyvault/actions/runs/40226816791)).
 - [ ] Run OS-native keychain jobs on macOS, Windows and Linux.
 - [ ] Add smoke tests for Claude Desktop, Cursor and one additional MCP client; record exact tested versions/configurations.
 - [ ] Build wheel and source distribution; install in a clean environment and verify the packaged UI loads.
