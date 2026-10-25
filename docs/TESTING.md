@@ -2,7 +2,7 @@
 
 ## What the current suite establishes
 
-The latest recorded GitHub Actions run before this readiness update passed **62 pytest tests** on Linux/Python 3.12 ([run](https://github.com/Loofy147/keyvault/actions/runs/40225556583)). Coverage includes vault encryption/tampering, session cache logic with test doubles, CLI flows, URL/method restrictions, response filtering, stdio MCP behavior, local UI HTTP/CSRF/Host behavior and embedded JavaScript syntax.
+The current GitHub Actions matrix passed **62 pytest tests on each of Ubuntu/Python 3.11, 3.12, 3.13 and 3.14** ([run](https://github.com/Loofy147/keyvault/actions/runs/40226816791)). Coverage includes vault encryption/tampering, session cache logic with test doubles, CLI flows, URL/method restrictions, response filtering, stdio MCP behavior, local UI HTTP/CSRF/Host behavior and embedded JavaScript syntax.
 
 It does **not** establish:
 - native OS keychain behavior on macOS/Windows/Linux desktop;
