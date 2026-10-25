@@ -25,7 +25,7 @@ a{color:var(--accent)}
 .panel{padding:20px;margin-top:16px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.panel-head h2{font-size:15px;margin:0;letter-spacing:-.2px}.panel-head p{font-size:12px;color:var(--muted);margin:3px 0 0}.muted{color:var(--muted)}.tiny{font-size:11px}.list{display:flex;flex-direction:column}.list-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #22303e}.list-row:first-child{border-top:0}.cred-mark{flex:none;display:grid;place-items:center;width:37px;height:37px;border-radius:10px;background:#1b2b38;color:#a4f3dc;font-size:14px;font-weight:800}.grow{min-width:0;flex:1}.row-title{font-weight:700;overflow-wrap:anywhere}.row-sub{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.badge{display:inline-block;border:1px solid #304455;border-radius:6px;padding:3px 7px;font-size:10px;color:#b9cad9;white-space:nowrap}.badge.green{color:var(--accent);border-color:#2e6157;background:#17312e}.badge.warn{color:var(--amber);border-color:#634f33;background:#2b2419}
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:11px}table{border-collapse:collapse;width:100%;min-width:690px;text-align:left}th{background:#18232f;color:#9eb0c0;font-weight:700;text-transform:uppercase;letter-spacing:.9px;font-size:10px;position:sticky;top:0}th,td{padding:12px 13px;border-bottom:1px solid #263440;vertical-align:top}tbody tr:last-child td{border-bottom:0}td{font-size:12px;color:#cad5e0}td strong{color:var(--text);font-size:13px}.actions{display:flex;gap:6px}
 .search{border:1px solid var(--line);background:#0c131b;color:var(--text);padding:9px 11px;border-radius:9px;width:min(100%,260px)}
-.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px;min-width:0}.field.full{grid-column:1/-1}.field label{font-size:11px;color:#a4b4c3;font-weight:700}.field input,.field select,.field textarea{width:100%;background:#0c131b;border:1px solid #304050;border-radius:9px;padding:10px 11px;color:var(--text);min-width:0}.field textarea{resize:vertical;min-height:74px}.field small{font-size:11px;color:#7d92a5}.form-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:17px;flex-wrap:wrap}
+.scope-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.scope-option{display:flex;align-items:center;gap:9px;background:#0c131b;border:1px solid var(--line);padding:10px 12px;border-radius:9px;min-width:0;overflow-wrap:anywhere}.scope-option input{accent-color:var(--accent)}.scope-option span{overflow-wrap:anywhere}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px;min-width:0}.field.full{grid-column:1/-1}.field label{font-size:11px;color:#a4b4c3;font-weight:700}.field input,.field select,.field textarea{width:100%;background:#0c131b;border:1px solid #304050;border-radius:9px;padding:10px 11px;color:var(--text);min-width:0}.field textarea{resize:vertical;min-height:74px}.field small{font-size:11px;color:#7d92a5}.form-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:17px;flex-wrap:wrap}
 .notice{border:1px solid #34524d;background:#142823;color:#c5f4e7;padding:12px 14px;border-radius:10px;font-size:12px;margin:0 0 14px}.notice.warn{border-color:#6a5332;background:#2b2318;color:#ffdfa9}.notice.error{border-color:#643642;background:#2b1921;color:#ffc1c8}.empty{padding:30px 14px;text-align:center;color:var(--muted)}.empty strong{display:block;color:var(--text);margin:6px 0}.empty .btn{margin-top:12px}
 .lock-wrap{max-width:560px;margin:36px auto;padding:clamp(20px,4vw,32px)}.lock-art{font-size:28px}.lock-wrap h2{margin:7px 0 6px;font-size:24px;letter-spacing:-.6px}.lock-wrap p{color:var(--muted);margin:0 0 22px}.lock-wrap .field{margin-top:14px}.lock-wrap .btn{width:100%;margin-top:18px}.hidden{display:none!important}.toast{position:fixed;bottom:22px;right:22px;z-index:30;max-width:min(420px,calc(100vw - 32px));padding:12px 16px;border:1px solid #365d53;border-radius:11px;background:#152d28;color:#d5fff2;box-shadow:0 10px 35px #0008}.toast.error{border-color:#74414a;background:#301c23;color:#ffd1d5}
 .audit-item{display:grid;grid-template-columns:155px 1fr auto;gap:12px;padding:13px 0;border-bottom:1px solid #24323f;font-size:12px}.audit-item:last-child{border:0}.audit-time{color:var(--muted)}.audit-action{font-weight:750}.audit-details{color:#98a9b9;overflow-wrap:anywhere;margin-top:3px}.danger-zone{border-color:#583742}.danger-zone h2{color:var(--red)}
@@ -82,6 +82,7 @@ a{color:var(--accent)}
           <div class="table-wrap"><table><thead><tr><th>Credential</th><th>Auth</th><th>Allowed hosts</th><th>Methods</th><th>Exposure</th><th>Actions</th></tr></thead><tbody id="credentials-table"></tbody></table></div>
           <div id="credentials-empty" class="empty hidden"><div style="font-size:26px">⌘</div><strong>No credentials found</strong><span>Add a credential or change the search.</span></div>
         </div>
+        <section class="panel"><div class="panel-head"><div><h2>Build a scoped MCP config</h2><p>Select only the credentials this MCP server should be allowed to use. The output contains credential names, never secret values.</p></div><span class="badge green">Least privilege</span></div><div id="scope-choices" class="scope-choices"></div><div class="form-footer"><span class="tiny muted">The client must run in the same environment where keyvault is installed and unlocked.</span><button class="btn primary" id="generate-mcp-snippet" type="button">Generate config</button></div><div id="snippet-output" class="hidden" style="margin-top:16px"><div class="field"><label for="mcp-snippet">mcpServers JSON</label><textarea id="mcp-snippet" rows="8" readonly spellcheck="false"></textarea></div><div class="form-footer"><span class="tiny muted">Merge into your MCP client configuration.</span><button class="btn" id="copy-mcp-snippet" type="button">Copy JSON</button></div></div></section>
         <div id="editor" class="panel hidden">
           <div class="panel-head"><div><h2 id="editor-title">New credential</h2><p>Secret values are write-only here. Leave the secret blank when editing to preserve the current value.</p></div><button class="btn small ghost" id="cancel-editor" type="button">Close ×</button></div>
           <form id="credential-form">
@@ -119,7 +120,7 @@ a{color:var(--accent)}
 "use strict";
 const CSRF = "__KEYVAULT_CSRF_TOKEN__";
 const $ = (id) => document.getElementById(id);
-const state = {status:null,credentials:[],events:[],view:"overview",editing:null,initialized:false};
+const state = {status:null,credentials:[],events:[],view:"overview",editing:null,initialized:false,scopeSelection:[]};
 const methods = ["GET","HEAD","POST","PUT","PATCH","DELETE"];
 function node(tag, cls, text) { const n=document.createElement(tag); if(cls)n.className=cls; if(text!==undefined)n.textContent=String(text); return n; }
 function append(parent,tag,cls,text){const n=node(tag,cls,text);parent.appendChild(n);return n;}
@@ -200,6 +201,19 @@ function renderCredentials(){
     td=append(tr,"td");append(td,"span","badge "+(c.kind==="none"?"warn":"green"),c.kind==="none"?"Env only":"MCP eligible");
     td=append(tr,"td");const actions=append(td,"div","actions");const edit=append(actions,"button","btn small","Edit");edit.type="button";edit.addEventListener("click",()=>openEditor(c.name));const del=append(actions,"button","btn small danger","Delete");del.type="button";del.addEventListener("click",()=>deleteCredential(c.name));
   });
+  renderScopeSelector();
+}
+function renderScopeSelector(){
+  const host=$("scope-choices");host.replaceChildren();
+  const eligible=state.credentials.filter(c=>c.kind!=="none");
+  state.scopeSelection=state.scopeSelection.filter(n=>eligible.some(c=>c.name===n));
+  if(!eligible.length){append(host,"div","empty","Add an HTTP credential to generate a scoped MCP config.");$("generate-mcp-snippet").disabled=true;return;}
+  $("generate-mcp-snippet").disabled=false;
+  eligible.forEach(c=>{
+    const label=append(host,"label","scope-option");const input=document.createElement("input");input.type="checkbox";input.value=c.name;input.checked=state.scopeSelection.includes(c.name);
+    input.addEventListener("change",()=>{if(input.checked){if(!state.scopeSelection.includes(c.name))state.scopeSelection.push(c.name);}else{state.scopeSelection=state.scopeSelection.filter(n=>n!==c.name);}});
+    label.appendChild(input);append(label,"span","",c.name);
+  });
 }
 function renderAudit(){
   const host=$("audit-list");host.replaceChildren();$("audit-count").textContent=state.events.length+" events";$("audit-empty").classList.toggle("hidden",state.events.length>0);
@@ -224,7 +238,8 @@ function openEditor(name=null){
   $("secret-help").textContent=c?"Leave blank to keep the stored secret; enter a value only to rotate it.":"The value is encrypted when saved, then cleared from this form.";
   $("c-hosts").value=(c?.hosts||[]).join("\n");$("c-header").value=c?.header_name||"";$("c-param").value=c?.param_name||"";
   $("c-env").value=c?.env_var||"";$("c-tags").value=(c?.tags||[]).join(", ");$("c-notes").value=c?.notes||"";
-  setupMethods(c?.methods||["GET","HEAD"]);$("editor").classList.remove("hidden");$("editor").scrollIntoView({behavior:"smooth",block:"start"});
+  $("c-hosts").disabled=(c?.kind||"bearer")==="none";setupMethods(c?.methods||["GET","HEAD"]);document.querySelectorAll("#method-options input").forEach(input=>input.disabled=(c?.kind||"bearer")==="none");
+  $("method-options").style.opacity=(c?.kind||"bearer")==="none"?".45":"1";$("editor").classList.remove("hidden");$("editor").scrollIntoView({behavior:"smooth",block:"start"});
 }
 function closeEditor(){$("editor").classList.add("hidden");state.editing=null;$("credential-form").reset();$("c-name").disabled=false;$("c-secret").required=true;setupMethods();}
 $("credential-form").addEventListener("submit",async e=>{
@@ -252,6 +267,8 @@ document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",(
 $("top-lock").addEventListener("click",lockVault);$("refresh-overview").addEventListener("click",refreshAll);$("refresh-credentials").addEventListener("click",refreshAll);$("refresh-audit").addEventListener("click",refreshAll);
 $("add-first").addEventListener("click",()=>{setView("credentials");openEditor();});$("new-credential").addEventListener("click",()=>openEditor());$("cancel-editor").addEventListener("click",closeEditor);$("cancel-editor-bottom").addEventListener("click",closeEditor);
 $("all-credentials").addEventListener("click",()=>setView("credentials"));$("all-audit").addEventListener("click",()=>setView("audit"));$("credential-search").addEventListener("input",renderCredentials);
+$("generate-mcp-snippet").addEventListener("click",async()=>{const allow=[...document.querySelectorAll("#scope-choices input:checked")].map(x=>x.value);try{const r=await api("/api/snippet",{allow});$("mcp-snippet").value=r.snippet;$("snippet-output").classList.remove("hidden");toast("Scoped MCP config generated.");}catch(e){toast(e.message,true);}});
+$("copy-mcp-snippet").addEventListener("click",async()=>{try{await navigator.clipboard.writeText($("mcp-snippet").value);toast("MCP config copied.");}catch(_){$("mcp-snippet").focus();$("mcp-snippet").select();toast("Clipboard unavailable; config selected for manual copy.",true);}});
 $("c-kind").addEventListener("change",()=>{const k=$("c-kind").value;$("c-hosts").disabled=k==="none";document.querySelectorAll("#method-options input").forEach(input=>input.disabled=k==="none");$("method-options").style.opacity=k==="none"?".45":"1";});
 setupMethods();refreshAll();
 </script>
