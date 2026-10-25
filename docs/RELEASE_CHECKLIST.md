@@ -31,6 +31,7 @@ A release is blocked until every required item is checked and its evidence link 
 - [ ] Mutation tests pass or every survivor is explained, risk-assessed and assigned an owner.
 - [ ] Fuzz/property tests cover URL policy, vault envelopes, metadata, dotenv import and redaction boundaries.
 - [ ] Dependency scan has no unresolved high/critical issue; exceptions have owner, reason and expiry.
+- [ ] Release dependency set is reproducibly locked; audit the exact dependency set used to build the release.
 - [ ] Package builds as wheel and source distribution.
 - [ ] Clean-install tests confirm the UI asset is included.
 - [ ] Console command and module entry point work after clean install.
