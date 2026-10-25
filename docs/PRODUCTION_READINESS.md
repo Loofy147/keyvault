@@ -17,7 +17,7 @@ Latest verified regression result for the readiness update: **62 passed on each 
 | Local UI | Host/Origin/CSRF checks and JavaScript syntax check | Partially tested | Browser end-to-end tests and session-race tests |
 | Persistence integrity | Atomic replacement; encrypted backup copy | **Concurrency gap** | Cross-process writer locking and crash-recovery evidence |
 | Audit | Structured JSONL events | Local tampering is possible | Retention/integrity model, rotation and disk-full tests |
-| Supply chain | CI installs from current dependency ranges | **Governance gap** | Dependency audit, immutable action pins, supported-Python matrix |
+| Supply chain | Immutable action pins, weekly dependency audit and Dependabot updates; initial audit found no known vulnerabilities | Partially hardened | Keep reviewing updates; add release-specific artifact provenance and exception expiry |
 | Release/recovery | CLI commands exist; backup semantics documented | Incomplete | Reproducible artifacts, clean install, recovery and rollback evidence |
 
 ## Release-blocking issues
@@ -80,10 +80,10 @@ The audit file is local and editable by the same OS identity. Filtering events i
 
 - [ ] All P0 issues above are closed with evidence links.
 - [ ] Native keychain tests pass on every platform claimed as supported.
-- [ ] Python support floor excludes end-of-life interpreters.
+- [x] Python support floor excludes end-of-life interpreters.
 - [ ] Regression, targeted security and mutation suites pass on the release commit.
-- [ ] Dependency audit has no unresolved high/critical issue; exceptions have owner and expiry.
-- [ ] Third-party actions are pinned to reviewed full commit SHAs.
+- [x] Initial dependency audit reported no known vulnerabilities ([run](https://github.com/Loofy147/keyvault/actions/runs/40226816792)); repeat and review exceptions for each release.
+- [x] Third-party actions are pinned to reviewed full commit SHAs.
 - [ ] Clean wheel/source-distribution install works; package includes the UI asset.
 - [ ] Backup/restore, passphrase change, secret rotation and incident recovery are rehearsed.
 - [ ] Browser tests pass; UI remains explicitly documented as local-only.
