@@ -4,7 +4,7 @@
 
 Last reviewed: 2026-10-25  
 Repository: https://github.com/Loofy147/keyvault  
-Latest verified regression result before this readiness update: **62 passed** on GitHub Actions / Linux / Python 3.12 ([run](https://github.com/Loofy147/keyvault/actions/runs/40225556583)). Every supported operating system and interpreter has not yet been verified.
+Latest verified regression result for the readiness update: **62 passed on each of Python 3.11, 3.12, 3.13 and 3.14 on Ubuntu** ([CI matrix run](https://github.com/Loofy147/keyvault/actions/runs/40226816791)). Native keychain OS integration and browser E2E have not yet been verified. The initial dependency audit reported **No known vulnerabilities found** ([security workflow](https://github.com/Loofy147/keyvault/actions/runs/40226816792)).
 
 ## Evidence ledger
 
