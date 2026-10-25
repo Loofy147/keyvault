@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import os
 import secrets
+import sys
 import threading
 import time
 import webbrowser
@@ -269,6 +270,8 @@ class KeyvaultUIHandler(BaseHTTPRequestHandler):
                 self._save_credential(data)
             elif path == "/api/credentials/delete":
                 self._delete_credential(data)
+            elif path == "/api/snippet":
+                self._generate_snippet(data)
             else:
                 self._json(404, {"error": "Not found."})
         except V.BadPassphrase:
@@ -329,6 +332,34 @@ class KeyvaultUIHandler(BaseHTTPRequestHandler):
         vault.delete(name)
         V.audit({"actor": "webui", "action": "credential_deleted", "credential": name})
         self._json(200, {"ok": True, "message": f"Credential '{name}' deleted."})
+
+    def _generate_snippet(self, data: dict):
+        vault = _unlocked_vault(V.vault_path())
+        allow = _strings(data.get("allow"), limit=80, field="Allowed credentials")
+        if not allow:
+            raise VaultError("Select at least one credential for this MCP server.")
+        if len(set(allow)) != len(allow):
+            raise VaultError("A credential can only be selected once.")
+        missing = sorted(set(allow) - set(vault.creds))
+        if missing:
+            raise VaultError("Unknown credential(s): " + ", ".join(missing))
+        env_only = sorted(n for n in allow if vault.creds[n].kind == "none")
+        if env_only:
+            raise VaultError("Env-only credentials cannot be used by http_request: " + ", ".join(env_only))
+        entry = {
+            "command": sys.executable,
+            "args": ["-m", "keyvault", "serve", "--allow", ",".join(sorted(allow))],
+        }
+        child_env = {}
+        if os.environ.get("KEYVAULT_HOME"):
+            child_env["KEYVAULT_HOME"] = os.environ["KEYVAULT_HOME"]
+        if os.environ.get(V.SESSION_BACKEND_ENV):
+            child_env[V.SESSION_BACKEND_ENV] = V.session_backend_name()
+        if child_env:
+            entry["env"] = child_env
+        snippet = json.dumps({"mcpServers": {"keyvault": entry}}, indent=2)
+        V.audit({"actor": "webui", "action": "snippet_generated", "allow": sorted(allow)})
+        self._json(200, {"snippet": snippet, "credential_count": len(allow)})
 
 
 class KeyvaultUIServer(ThreadingHTTPServer):
