@@ -339,6 +339,13 @@ def cmd_run(a):
         _die(f"command not found: {a.rest[0]}", 127)
 
 
+def cmd_ui(a):
+    from .ui import run_ui
+
+    run_ui(a.port, open_browser=not a.no_browser)
+    return 0
+
+
 def cmd_serve(a):
     path = V.vault_path()
     vault, source = V.unlock(path, interactive=False)  # never prompt: stdin is the MCP channel
@@ -474,6 +481,11 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("creds", nargs="*")
     sp.add_argument("-e", "--env", action="append", default=[], metavar="VAR=CRED")
     sp.set_defaults(func=cmd_run)
+
+    sp = sub.add_parser("ui", help="open the local-only web UI for credentials, session and audit")
+    sp.add_argument("--port", type=int, default=8765, help="loopback port (default 8765; use 0 for an ephemeral port)")
+    sp.add_argument("--no-browser", action="store_true", help="print the URL without opening a browser")
+    sp.set_defaults(func=cmd_ui)
 
     sp = sub.add_parser("serve", help="run the MCP server on stdio")
     sp.add_argument("--allow", help="comma-separated credential names this server may use (default: all HTTP credentials)")
