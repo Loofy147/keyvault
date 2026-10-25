@@ -71,6 +71,6 @@ scrypt (default N=2^17) -> AES-256-GCM. The KDF parameters are authenticated, so
 
 ## Tests
 
-    pip install -e '.[test]' && pytest         # 57 tests in the current Linux/Python 3.12 CI run (runtime depends on platform and scrypt performance)
+    pip install -e '.[test]' && pytest         # 62 tests in the current Linux/Python 3.12 CI run (runtime depends on platform and scrypt performance)
     python tests/mutation_check.py             # breaks 26 behaviours on purpose, expects a test to fail each time
     python tests/live_github_check.py          # needs internet: real HTTPS call with a FAKE token
