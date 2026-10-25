@@ -1,5 +1,8 @@
 import http.client
 import json
+import re
+import shutil
+import subprocess
 import threading
 from urllib.parse import urlsplit
 
@@ -179,3 +182,15 @@ def test_ui_unlock_attempt_throttle(ui):
     assert ui.unlock_rate_limited()
     ui.clear_unlock_failures()
     assert not ui.unlock_rate_limited()
+
+
+
+def test_embedded_ui_javascript_parses():
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("Node.js unavailable; browser-side syntax validation is optional outside CI.")
+    html = (V.Path(__file__).parents[1] / "keyvault" / "ui.html").read_text(encoding="utf-8")
+    match = re.search(r"<script>\s*(.*?)\s*</script>", html, flags=re.S)
+    assert match, "UI must contain its embedded local script"
+    result = subprocess.run([node, "--check"], input=match.group(1), text=True, capture_output=True, timeout=10)
+    assert result.returncode == 0, result.stderr
